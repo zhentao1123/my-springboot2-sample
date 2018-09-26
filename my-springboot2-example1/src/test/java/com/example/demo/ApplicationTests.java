@@ -13,7 +13,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
 @WebAppConfiguration
-@ActiveProfiles(Profiles.LOCAL_DEV)
+@ActiveProfiles(Profiles.DEV)
 @TestExecutionListeners({ DependencyInjectionTestExecutionListener.class, TransactionalTestExecutionListener.class })
 public class ApplicationTests {
 

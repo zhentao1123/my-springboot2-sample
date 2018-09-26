@@ -21,7 +21,6 @@ import org.springframework.transaction.support.TransactionTemplate;
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages={"com.example.demo.dao"}, entityManagerFactoryRef="entityManagerFactory", transactionManagerRef="transactionManager")
-//@EnableJpaRepositories(basePackages={"com.example.demo.dao"})
 //@EntityScan(basePackages={"com.example.demo.dao.entity"})
 public class TransactionManagerConfig {
 
@@ -36,11 +35,7 @@ public class TransactionManagerConfig {
 	@Resource(name = "transactionManager")
 	JpaTransactionManager jpaTransactionManager;
 	
-	/**
-	 *  -- TransactionTemplate --
-	 *  编程式事务使用
-	 * @return
-	 */
+	// -- TransactionTemplate 编程式事务使用 --
 	@Bean(name = "transactionTemplate")
 	public TransactionTemplate transactionTemplate() {
 		TransactionTemplate transactionTemplate = new TransactionTemplate();
