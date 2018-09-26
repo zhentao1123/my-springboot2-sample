@@ -2,15 +2,10 @@ spring:
   profiles: prod
   
   datasource: 
-    driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://rm-bp1u5rjw50e6b1h06lo.mysql.rds.aliyuncs.com:3306/micro_isv_dev?useSSL=false&autoCommit=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&autoReconnect=true&maxReconnects=2&useCompression=true
-    username: xglorymicro_rw
-    password: H4E-zvweT9-Xc-s33W
-    type: com.zaxxer.hikari.HikariDataSource
     hikari: 
-      jdbc-url: jdbc:mysql://rm-bp1u5rjw50e6b1h06lo.mysql.rds.aliyuncs.com:3306/micro_isv_dev?useSSL=false&autoCommit=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&autoReconnect=true&maxReconnects=2&useCompression=true
-      username: xglorymicro_rw
-      password: H4E-zvweT9-Xc-s33W
+      jdbc-url: 
+      username: 
+      password: 
       driver-class-name: com.mysql.jdbc.Driver
       pool-name: hikari
       auto-commit: false
