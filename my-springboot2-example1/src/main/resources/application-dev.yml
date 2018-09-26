@@ -3,10 +3,10 @@ spring:
   
   datasource: 
     hikari: 
-      jdbc-url: 
-      username: 
-      password: 
-      driver-class-name: 
+      jdbc-url: jdbc:mysql://rm-bp1u5rjw50e6b1h06.mysql.rds.aliyuncs.com:3306/micro_isv_dev?useSSL=false&autoCommit=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&autoReconnect=true&maxReconnects=2&useCompression=true
+      username: xglorymicro_rw
+      password: H4E-zvweT9-Xc-s33W
+      driver-class-name: com.mysql.jdbc.Driver
       pool-name: hikari
       auto-commit: false
       connection-timeout: 30000
