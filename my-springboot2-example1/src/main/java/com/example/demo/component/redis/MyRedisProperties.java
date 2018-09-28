@@ -6,16 +6,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class MyRedisProperties {
 	
-	@Value("${spring.redis.timeout}")
+	@Value("${redis.timeout}")
 	private int timeout;
 	
-	@Value("${spring.redis.host}")
+	@Value("${redis.host}")
 	private String host;
 	
-	@Value("${spring.redis.port}")
+	@Value("${redis.port}")
 	private int port;
 	
-	@Value("${spring.redis.password}")
+	@Value("${redis.password}")
 	private String password;
 	
 	public int getTimeout() {
