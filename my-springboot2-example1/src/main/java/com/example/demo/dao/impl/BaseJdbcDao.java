@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -262,4 +263,71 @@ public class BaseJdbcDao{
 		Long id = keyholder.getKey().longValue();
 		return id;
 	}
+	
+	
+	//-- Pager Begin -----------------------------------------------------
+	public int getPageSqlLimitStart(int pageIndex, int pageSize) {
+		int limitStart = 0;
+
+		if (pageIndex <= 0)
+			pageIndex = 1;
+
+		if (pageSize <= 0)
+			pageSize = 20;
+
+		if ((pageIndex - 1) * pageSize > Integer.MAX_VALUE) {
+			limitStart = Integer.MAX_VALUE;
+		} else {
+			limitStart = (pageIndex - 1) * pageSize;
+		}
+
+		return limitStart;
+	}
+
+	public <O> List<O> getPageObject(String sql, Class<O> requiredType, int pageIndex, int pageSize, Map<String, ?> args) throws Exception {
+		int limitStart = getPageSqlLimitStart(pageIndex, pageSize);
+		String sqlRun = "select * from ( " + sql + " ) __tmp__ limit " + limitStart + "," + pageSize;
+		return queryObjectList(sqlRun, requiredType, args);
+	}
+
+	public <O> List<O> getPageObject(String sql, Class<O> requiredType, int pageIndex, int pageSize,Object...  args) throws Exception {
+		int limitStart = getPageSqlLimitStart(pageIndex, pageSize);
+		String sqlRun = "select * from ( " + sql + " ) __tmp__ limit " + limitStart + "," + pageSize;
+		return queryObjectList(sqlRun, requiredType, args);
+	}
+
+	public Long getTotalCountLong(String sql, Object... args) throws Exception {
+		String sqlFinal = "select count(0) from ( " + sql + " ) __tmp__ ";
+		return queryValue(sqlFinal, Long.class, args);
+	}
+
+	public Long getTotalCountLong(String sql, Map<String, ?> args) throws Exception {
+		String sqlFinal = "select count(0) from ( " + sql + " ) __tmp__ ";
+		return queryValue(sqlFinal, Long.class, args);
+	}
+	
+	public Integer getTotalCountInt(String sql, Object... args) throws Exception {
+		String sqlFinal = "select count(0) from ( " + sql + " ) __tmp__ ";
+		return queryValue(sqlFinal, Integer.class, args);
+	}
+
+	public Integer getTotalCountInt(String sql, Map<String, ?> args) throws Exception {
+		String sqlFinal = "select count(0) from ( " + sql + " ) __tmp__ ";
+		return queryValue(sqlFinal, Integer.class, args);
+	}
+	
+	//-- Pager End ---------------------------------------------------------------------------------
+
+	public Long getLastInsertID() throws Exception {
+		return queryValue("SELECT LAST_INSERT_ID()", Long.class);
+	}
+
+	public static java.sql.Timestamp getTimestampNow() {
+		return new java.sql.Timestamp(new java.util.Date().getTime());
+	}
+
+	public static String getUUIDKey() {
+		return UUID.randomUUID().toString().replaceAll("-", "");
+	}
+
 }
