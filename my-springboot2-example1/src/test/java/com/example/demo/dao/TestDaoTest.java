@@ -11,9 +11,9 @@ import com.example.demo.ApplicationTests;
 import com.example.demo.dao.repository.TestRepository;
 import com.example.demo.util.json.JsonUtil;
 
-public class TestDao extends ApplicationTests{
+public class TestDaoTest extends ApplicationTests{
 	
-	private static final Logger log = LoggerFactory.getLogger(TestDao.class);
+	private static final Logger log = LoggerFactory.getLogger(TestDaoTest.class);
 	
 	@Autowired
 	TestRepository testRepository;

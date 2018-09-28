@@ -1,5 +1,8 @@
 package com.example.demo.dao.impl;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -8,8 +11,16 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.annotation.Persistent;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+
+import com.mysql.jdbc.Statement;
 
 @Persistent
 public class BaseJdbcDao{
@@ -32,7 +43,7 @@ public class BaseJdbcDao{
 		return BeanPropertyRowMapper.newInstance(clazz);
 	}
 	
-	public <V> V queryValue(String sql, Class<V> requiredType, Object... args) throws Exception {
+	public <V> V queryValue(final String sql, final Class<V> requiredType, final Object... args) throws Exception {
 		try {  
 	    	return (args!=null && args.length!=0) ? 
 	    			getJdbcTemplate().queryForObject(sql, args, requiredType) : 
@@ -42,7 +53,7 @@ public class BaseJdbcDao{
 	    }
 	}
 
-	public <V> List<V> queryValueList(String sql, Class<V> requiredType, Object... args) throws Exception {
+	public <V> List<V> queryValueList(final String sql, final Class<V> requiredType, final Object... args) throws Exception {
 		try {  
 	    	return (args!=null && args.length!=0) ? 
 	    			getJdbcTemplate().queryForList(sql, requiredType, args):
@@ -52,7 +63,7 @@ public class BaseJdbcDao{
 	    }
 	}
 
-	public Map<String, Object> queryMap(String sql, Object... args) throws Exception {
+	public Map<String, Object> queryMap(final String sql, final Object... args) throws Exception {
 		try {
 			return getJdbcTemplate().queryForMap(sql, args);
 	    } catch (EmptyResultDataAccessException e){
@@ -60,7 +71,7 @@ public class BaseJdbcDao{
 	    }
 	}
 
-	public List<Map<String, Object>> queryMapList(String sql, Object... args) throws Exception {
+	public List<Map<String, Object>> queryMapList(final String sql, final Object... args) throws Exception {
 		try {  
 	    	return (args!=null && args.length!=0) ? 
 	    			getJdbcTemplate().queryForList(sql, args) : 
@@ -70,7 +81,7 @@ public class BaseJdbcDao{
 	    }
 	}
 
-	public <O> O queryObject(String sql, final Class<O> requiredType, Object... args) throws Exception {
+	public <O> O queryObject(final String sql, final Class<O> requiredType, final Object... args) throws Exception {
 		try {
 			return getJdbcTemplate().queryForObject(sql, args, getRowMapper(requiredType));
 	    } catch (EmptyResultDataAccessException e){
@@ -78,7 +89,7 @@ public class BaseJdbcDao{
 	    }
 	}
 
-	public <O> List<O> queryObjectList(String sql, final Class<O> requiredType, Object... args) throws Exception {
+	public <O> List<O> queryObjectList(final String sql, final Class<O> requiredType, final Object... args) throws Exception {
 		try {  
 	    	return (args!=null && args.length!=0) ? 
 	    			getJdbcTemplate().query(sql, args, getRowMapper(requiredType)) : 
@@ -88,11 +99,11 @@ public class BaseJdbcDao{
 	    }
 	}
 
-	public void update(String sql, Object... args) throws Exception {
+	public void update(final String sql, final Object... args) throws Exception {
 		getJdbcTemplate().update(sql, args);
 	}
 
-	public void batchUpdate(final String sql, List<Object[]> batchArgs) throws Exception{
+	public void batchUpdate(final String sql, final List<Object[]> batchArgs) throws Exception{
 		if(batchArgs!=null && !batchArgs.isEmpty()) {
 			getJdbcTemplate().batchUpdate(sql, batchArgs);
 		}else {
@@ -100,9 +111,47 @@ public class BaseJdbcDao{
 		}
 	}
 	
+	public Integer addObjectReturnIntId(final String sql, final Object... args) throws Exception {
+		PreparedStatementCreator psc = new PreparedStatementCreator(){
+			@Override
+			public PreparedStatement createPreparedStatement(Connection con) throws SQLException{
+				PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+				if(null!=args && args.length!=0) {
+					for(int i=0; i<args.length; i++) {
+						ps.setObject(i+1, args[i]);
+					}
+				}
+				return ps;
+			}
+		};
+		KeyHolder keyholder = new GeneratedKeyHolder();
+		getJdbcTemplate().update(psc, keyholder);
+		Integer id = keyholder.getKey().intValue();
+		return id;
+	}
+	
+	public Long addObjectReturnLongId(final String sql, final Object... args) throws Exception {
+		PreparedStatementCreator psc = new PreparedStatementCreator(){
+			@Override
+			public PreparedStatement createPreparedStatement(Connection con) throws SQLException{
+				PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+				if(null!=args && args.length!=0) {
+					for(int i=0; i<args.length; i++) {
+						ps.setObject(i+1, args[i]);
+					}
+				}
+				return ps;
+			}
+		};
+		KeyHolder keyholder = new GeneratedKeyHolder();
+		getJdbcTemplate().update(psc, keyholder);
+		Long id = keyholder.getKey().longValue();
+		return id;
+	}
+	
 	//-------------------------------------------------------------------
 
-	public <V> V queryValue(String sql, Class<V> requiredType, Map<String, ?> args) throws Exception {
+	public <V> V queryValue(final String sql, final Class<V> requiredType, final Map<String, ?> args) throws Exception {
 		try {  
 			return getNamedParameterJdbcTemplate().queryForObject(sql, args, requiredType);
 	    } catch (EmptyResultDataAccessException e){
@@ -110,7 +159,7 @@ public class BaseJdbcDao{
 	    }
 	}
 
-	public <V> List<V> queryValueList(String sql, Class<V> requiredType, Map<String, ?> args) throws Exception {
+	public <V> List<V> queryValueList(final String sql, final Class<V> requiredType, final Map<String, ?> args) throws Exception {
 		try {  
 			return getNamedParameterJdbcTemplate().queryForList(sql, args, requiredType);
 	    } catch (EmptyResultDataAccessException e){
@@ -118,7 +167,7 @@ public class BaseJdbcDao{
 	    }
 	}
 
-	public Map<String, Object> queryMap(String sql, Map<String, ?> args) throws Exception {
+	public Map<String, Object> queryMap(final String sql, final Map<String, ?> args) throws Exception {
 		try {  
 			return getNamedParameterJdbcTemplate().queryForMap(sql, args);
 	    } catch (EmptyResultDataAccessException e){
@@ -126,7 +175,7 @@ public class BaseJdbcDao{
 	    }
 	}
 
-	public List<Map<String, Object>> queryMapList(String sql, Map<String, ?> args) throws Exception {
+	public List<Map<String, Object>> queryMapList(final String sql, final Map<String, ?> args) throws Exception {
 		try {  
 			return getNamedParameterJdbcTemplate().queryForList(sql, args);
 	    } catch (EmptyResultDataAccessException e){
@@ -134,7 +183,7 @@ public class BaseJdbcDao{
 	    }
 	}
 
-	public <O> O queryObject(String sql, final Class<O> requiredType, Map<String, ?> args) throws Exception {
+	public <O> O queryObject(final String sql, final Class<O> requiredType, final Map<String, ?> args) throws Exception {
 		try {  
 			return getNamedParameterJdbcTemplate().queryForObject(sql, args, getRowMapper(requiredType));
 	    } catch (EmptyResultDataAccessException e){
@@ -142,7 +191,7 @@ public class BaseJdbcDao{
 	    }
 	}
 
-	public <O> List<O> queryObjectList(String sql, final Class<O> requiredType, Map<String, ?> args) throws Exception {
+	public <O> List<O> queryObjectList(final String sql, final Class<O> requiredType, final Map<String, ?> args) throws Exception {
 		try {  
 			return getNamedParameterJdbcTemplate().query(sql, args, getRowMapper(requiredType));
 	    } catch (EmptyResultDataAccessException e){
@@ -150,12 +199,67 @@ public class BaseJdbcDao{
 	    }
 	}
 
-	public void update(String sql, Map<String, ?> args) throws Exception {
+	public void update(final String sql, final Map<String, ?> args) throws Exception {
 		getNamedParameterJdbcTemplate().update(sql, args);
 	}
 	
-	public void batchUpdate(final String sql, Map<String, ?>[] batchArgs) throws Exception{
+	public void batchUpdate(final String sql, final Map<String, ?>[] batchArgs) throws Exception{
 		getNamedParameterJdbcTemplate().batchUpdate(sql, batchArgs);
 	}
+	
+	/**
+	 * 对象属性名必须和数据库完全一致
+	 * @param sql
+	 * @param obj
+	 * @return
+	 * @throws Exception
+	 */
+	public <O> Integer addObjectReturnIntId(final String sql, final O obj) throws Exception {
+		SqlParameterSource paramSource = new BeanPropertySqlParameterSource(obj);
+		KeyHolder keyholder = new GeneratedKeyHolder();
+		getNamedParameterJdbcTemplate().update(sql, paramSource, keyholder);
+		Integer id = keyholder.getKey().intValue();
+		return id;
+	}
+	
+	/**
+	 * 对象属性名必须和数据库完全一致
+	 * @param sql
+	 * @param obj
+	 * @return
+	 * @throws Exception
+	 */
+	public <O> Long addObjectReturnLongId(final String sql, final O obj) throws Exception {
+		SqlParameterSource paramSource = new BeanPropertySqlParameterSource(obj);
+		KeyHolder keyholder = new GeneratedKeyHolder();
+		getNamedParameterJdbcTemplate().update(sql, paramSource, keyholder);
+		Long id = keyholder.getKey().longValue();
+		return id;
+	}
 
+	public Integer addObjectReturnIntId(final String sql, final Map<String, ?> args) throws Exception {
+		MapSqlParameterSource paramSource = new MapSqlParameterSource();
+		if(null!=args && !args.isEmpty()) {
+			for (Map.Entry<String, ?> entry : args.entrySet()) {
+				paramSource = paramSource.addValue(entry.getKey(), entry.getValue());
+	        }
+		}
+		KeyHolder keyholder = new GeneratedKeyHolder();
+		getNamedParameterJdbcTemplate().update(sql, paramSource, keyholder);
+		Integer id = keyholder.getKey().intValue();
+		return id;
+	}
+	
+	public Long addObjectReturnLongId(final String sql, final Map<String, ?> args) throws Exception {
+		MapSqlParameterSource paramSource = new MapSqlParameterSource();
+		if(null!=args && !args.isEmpty()) {
+			for (Map.Entry<String, ?> entry : args.entrySet()) {
+				paramSource = paramSource.addValue(entry.getKey(), entry.getValue());
+	        }
+		}
+		KeyHolder keyholder = new GeneratedKeyHolder();
+		getNamedParameterJdbcTemplate().update(sql, paramSource, keyholder);
+		Long id = keyholder.getKey().longValue();
+		return id;
+	}
 }
