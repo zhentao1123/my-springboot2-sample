@@ -63,13 +63,16 @@ public class RedisCacheConfig extends CachingConfigurerSupport{
     @Value("${redis.pool.min-idle}")
     private Integer minIdle;
     
+    @Value("${redis.db-index.cache}")
+    private Integer cacheIndexCache;
+    
 	@Bean(name="cacheRedisConnectionFactory")
 	JedisConnectionFactory redisConnectionFactory() {
 		RedisStandaloneConfiguration standaloneConfig = new RedisStandaloneConfiguration();
 		standaloneConfig.setHostName(host);
 		standaloneConfig.setPassword(RedisPassword.of(password));
 		standaloneConfig.setPort(port);
-		standaloneConfig.setDatabase(0);//TODO
+		standaloneConfig.setDatabase(cacheIndexCache);
 		
 		JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
 		jedisPoolConfig.setMaxTotal(maxActive);
@@ -129,10 +132,11 @@ public class RedisCacheConfig extends CachingConfigurerSupport{
 		mapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
 		mapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
 		serializer.setObjectMapper(mapper);
+		template.setValueSerializer(serializer);
 		
-		template.setValueSerializer(serializer);        
 		//使用StringRedisSerializer来序列化和反序列化redis的key值
 		template.setKeySerializer(new StringRedisSerializer());
+		
 		template.afterPropertiesSet();
 		return template;
 	}
