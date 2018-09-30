@@ -4,5 +4,5 @@ import com.example.demo.dao.entity.Test;
 
 public interface TestService {
 
-	public Long addTest(Test test) throws Exception;
+	public Test addTest(Test test) throws Exception;
 }

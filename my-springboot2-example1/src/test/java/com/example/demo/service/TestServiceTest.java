@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 
 import com.example.demo.ApplicationTests;
+import com.example.demo.util.json.JsonUtil;
 
 public class TestServiceTest extends ApplicationTests{
 
@@ -21,7 +22,7 @@ public class TestServiceTest extends ApplicationTests{
 		com.example.demo.dao.entity.Test test = new com.example.demo.dao.entity.Test();
 		test.setName("Miki");
 		test.setAge(2);
-		Long id = testService.addTest(test);
-		System.out.println(id);
+		test = testService.addTest(test);
+		log.info(JsonUtil.obj2json(test));
 	}
 }

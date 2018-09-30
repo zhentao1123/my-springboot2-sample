@@ -16,7 +16,7 @@ public class TestServiceImpl implements TestService {
 	
 	@Override
 	@Transactional(readOnly=false, rollbackFor=Exception.class)
-	public Long addTest(Test test) throws Exception {
+	public Test addTest(Test test) throws Exception {
 		return testDao.saveTest(test);
 	}
 

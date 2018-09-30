@@ -13,10 +13,10 @@ public class TestJPASourceGenerator {
 	@Test
 	public void generatorSource() throws IOException, SQLException {
 
-		String url = "jdbc:mysql://rm-bp1u5rjw50e6b1h06lo.mysql.rds.aliyuncs.com:3306/micro_isv_dev?useSSL=false&autoCommit=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&autoReconnect=true&maxReconnects=2&useCompression=true"; 
-		String userName = "xglorymicro_rw"; 
-		String password = "H4E-zvweT9-Xc-s33W"; 
-		String database = "micro_isv_dev"; 
+		String url = "jdbc:mysql://127.0.0.1:3306/db1?useSSL=false&autoCommit=false&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&autoReconnect=true&maxReconnects=2&useCompression=true"; 
+		String userName = "root"; 
+		String password = "root"; 
+		String database = "db1"; 
 		
 		JPASourceGenerator sourceGenerator = new JPASourceGenerator(
 				url, userName, password, database, 

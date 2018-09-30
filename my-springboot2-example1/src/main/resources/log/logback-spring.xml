@@ -14,7 +14,7 @@
 	</appender>
 	
 	<logger name="com.example.demo" level="debug"/>
-	<logger name="org.springframework" level="off"/>
+	<logger name="org.springframework" level="info"/>
 	<logger name="springfox" level="off"/>
 	<logger name="org.dozer" level="off"/>
 	<logger name="com.zaxxer" level="off"/>

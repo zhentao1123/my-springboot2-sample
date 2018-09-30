@@ -23,15 +23,18 @@ import com.example.demo.dao.entity.BaseEntity;
 public class Test extends BaseEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
+	/**
+	 * id
+	 */
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="id", unique=true, nullable=false, length=20)
 	private Long id;
 	
-	@Column(name="name", length=50)
+	@Column(name="name", length=100)
 	private String name;
 	
-	@Column(name="age", length=3)
+	@Column(name="age", length=10)
 	private Integer age;
 
 	public Test(){

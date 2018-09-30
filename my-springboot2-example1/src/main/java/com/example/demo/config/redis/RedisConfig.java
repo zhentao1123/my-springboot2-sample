@@ -1,5 +1,6 @@
 package com.example.demo.config.redis;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,8 +39,8 @@ public class RedisConfig {
     @Value("${redis.pool.min-idle}")
     private Integer minIdle;
     
-    @Bean
     @Lazy
+    @Bean(name="jedisPoolConfig")
 	JedisPoolConfig jedisPoolConfig(){
 		JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
 		jedisPoolConfig.setMaxTotal(maxActive);
@@ -52,19 +53,10 @@ public class RedisConfig {
 		jedisPoolConfig.setTestOnReturn(true);
 		return jedisPoolConfig;
 	}
-    
-    
-    //== redis data 需要 ======================
-    @Bean
-	@Lazy
-	JedisConnectionFactory redisConnectionFactory() {
-    	//redis分布式后需要该换构造，加入哨兵配置
-		return new JedisConnectionFactory(jedisPoolConfig());
-	}
 	
     @Bean
-	MyJedisPool myJedisPool() {
-		return new MyJedisPool(jedisPoolConfig(), host, port, timeout, password);
+	MyJedisPool myJedisPool(@Qualifier(value="jedisPoolConfig") JedisPoolConfig jedisPoolConfig) {
+		return new MyJedisPool(jedisPoolConfig, host, port, timeout, password);
 	}
     
     /*

@@ -14,9 +14,9 @@ public class Application {
 	
 	@PostConstruct
 	public void logSomething() {
-		logger.debug("Sample Debug Message");
-		logger.trace("Sample Trace Message");
-		logger.info("Sample Info Message");
+//		logger.debug("Sample Debug Message");
+//		logger.trace("Sample Trace Message");
+//		logger.info("Sample Info Message");
 }
 	
 	public static void main(String[] args) {
