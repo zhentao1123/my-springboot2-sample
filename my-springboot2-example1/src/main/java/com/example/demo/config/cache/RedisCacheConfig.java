@@ -28,7 +28,6 @@ import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-import com.example.demo.config.redis.RedisJsonSerializer;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -96,9 +95,17 @@ public class RedisCacheConfig extends CachingConfigurerSupport{
 	@Bean
 	@Qualifier(value="cacheRedisConnectionFactory")
 	public CacheManager cacheManager(RedisConnectionFactory factory) {
+		
+		Jackson2JsonRedisSerializer<?> serializer = new Jackson2JsonRedisSerializer<>(Object.class);
+		ObjectMapper mapper = new ObjectMapper(); //该处可按需配置Json生成方式
+		mapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+		mapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
+		serializer.setObjectMapper(mapper);
+		
 		// 生成一个默认配置，通过config对象即可对缓存进行自定义配置
 	    RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
-	    			.serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new RedisJsonSerializer<>(Object.class)))  //自定义序列化
+	    			.serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
+	    			.serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(serializer))  //自定义序列化
 	    			.entryTtl(Duration.ofMinutes(1))	// 设置缓存的默认过期时间，也是使用Duration设置
 	            	.disableCachingNullValues();		// 不缓存空值
 
