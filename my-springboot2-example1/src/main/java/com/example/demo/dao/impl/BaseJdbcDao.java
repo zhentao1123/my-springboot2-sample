@@ -100,15 +100,15 @@ public class BaseJdbcDao{
 	    }
 	}
 
-	public void update(final String sql, final Object... args) throws Exception {
-		getJdbcTemplate().update(sql, args);
+	public int update(final String sql, final Object... args) throws Exception {
+		return getJdbcTemplate().update(sql, args);
 	}
 
-	public void batchUpdate(final String sql, final List<Object[]> batchArgs) throws Exception{
+	public int[] batchUpdate(final String sql, final List<Object[]> batchArgs) throws Exception{
 		if(batchArgs!=null && !batchArgs.isEmpty()) {
-			getJdbcTemplate().batchUpdate(sql, batchArgs);
+			return getJdbcTemplate().batchUpdate(sql, batchArgs);
 		}else {
-			getJdbcTemplate().batchUpdate(sql);
+			return getJdbcTemplate().batchUpdate(sql);
 		}
 	}
 	
@@ -200,12 +200,12 @@ public class BaseJdbcDao{
 	    }
 	}
 
-	public void update(final String sql, final Map<String, ?> args) throws Exception {
-		getNamedParameterJdbcTemplate().update(sql, args);
+	public int update(final String sql, final Map<String, ?> args) throws Exception {
+		return getNamedParameterJdbcTemplate().update(sql, args);
 	}
 	
-	public void batchUpdate(final String sql, final Map<String, ?>[] batchArgs) throws Exception{
-		getNamedParameterJdbcTemplate().batchUpdate(sql, batchArgs);
+	public int[] batchUpdate(final String sql, final Map<String, ?>[] batchArgs) throws Exception{
+		return getNamedParameterJdbcTemplate().batchUpdate(sql, batchArgs);
 	}
 	
 	/**
