@@ -8,6 +8,8 @@ import org.springframework.test.annotation.Rollback;
 
 import com.example.demo.ApplicationTests;
 import com.example.demo.util.json.JsonUtil;
+import com.example.demo.web.request.to.SaveTestVO;
+import com.example.demo.web.request.to.TestVO;
 
 public class TestServiceTest extends ApplicationTests{
 
@@ -19,10 +21,10 @@ public class TestServiceTest extends ApplicationTests{
 	@Test
 	@Rollback(false)
 	public void test1() throws Exception {
-		com.example.demo.dao.entity.Test test = new com.example.demo.dao.entity.Test();
+		SaveTestVO test = new SaveTestVO();
 		test.setName("Miki");
 		test.setAge(2);
-		test = testService.addTest(test);
-		log.info(JsonUtil.obj2json(test));
+		TestVO result = testService.saveTest(test);
+		log.info(JsonUtil.obj2json(result));
 	}
 }

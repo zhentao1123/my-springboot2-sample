@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class FilterConfig {
 
+	/*
 	@Bean
 	public FilterRegistrationBean serviceAuthFilterRegistration() {
 		// 配置无需过滤的路径或者静态资源，如：css，imgage等
@@ -18,7 +19,7 @@ public class FilterConfig {
 //		excludedUriStr.append("/js/*");
 
 		FilterRegistrationBean registration = new FilterRegistrationBean();
-	//registration.setFilter(new ServiceAuthFilter());
+		registration.setFilter(new ServiceAuthFilter());
 		registration.addUrlPatterns("/service/*");
 		//registration.addInitParameter("excludedUri", excludedUriStr.toString());
 		registration.setName("ServiceAuthFilter");
@@ -26,5 +27,5 @@ public class FilterConfig {
 		
 		return registration;
 	}
-	
+	*/
 }

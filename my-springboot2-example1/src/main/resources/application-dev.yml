@@ -27,5 +27,22 @@ redis: #为支持多源，单独配置，不使用自动配置
     max-wait: -1 # 连接池最大阻塞等待时间（使用负值表示没有限制）
     max-idle: 10 # 连接池中的最大空闲连接
     min-idle: 10 # 连接池中的最小空闲连接
-  db-index: 
+  db-index: #按需分配redis的db
     cache: 1
+    
+mail: 
+  log: 
+    sender: 
+      host: smtp.exmail.qq.com
+      username: ztzhang@xglory.cn #
+      password: 
+      defaultEncoding: UTF-8
+      port: 465
+      properties: 
+        mail:
+          smtp:
+            auth: true
+            starttls: 
+              enable: true
+              required: true
+    receiver: 

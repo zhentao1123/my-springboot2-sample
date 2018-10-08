@@ -7,6 +7,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.demo.dao.TestDao;
 import com.example.demo.dao.entity.Test;
 import com.example.demo.service.TestService;
+import com.example.demo.util.reflect.BeanMapper;
+import com.example.demo.web.request.to.FindTestByNameVO;
+import com.example.demo.web.request.to.RemoveTestByNameVO;
+import com.example.demo.web.request.to.SaveTestVO;
+import com.example.demo.web.request.to.TestVO;
 
 @Service
 public class TestServiceImpl implements TestService {
@@ -16,8 +21,22 @@ public class TestServiceImpl implements TestService {
 	
 	@Override
 	@Transactional(readOnly=false, rollbackFor=Exception.class)
-	public Test addTest(Test test) throws Exception {
-		return testDao.saveTest(test);
+	public TestVO saveTest(SaveTestVO param) throws Exception {
+		Test test = BeanMapper.map(param, Test.class);
+		Test result = testDao.saveTest(test);
+		return BeanMapper.map(result, TestVO.class);
+	}
+
+	@Override
+	public TestVO findTestByName(FindTestByNameVO param) throws Exception {
+		Test test = testDao.findTestByName(param.getName());
+		TestVO result = BeanMapper.map(test, TestVO.class);
+		return result;
+	}
+
+	@Override
+	public boolean removeTestByName(RemoveTestByNameVO param) throws Exception {
+		return testDao.removeTestByName(param.getName());
 	}
 
 }
