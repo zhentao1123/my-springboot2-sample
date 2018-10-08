@@ -35,6 +35,7 @@ public class TestServiceImpl implements TestService {
 	}
 
 	@Override
+	@Transactional(readOnly=false, rollbackFor=Exception.class)
 	public boolean removeTestByName(RemoveTestByNameVO param) throws Exception {
 		return testDao.removeTestByName(param.getName());
 	}

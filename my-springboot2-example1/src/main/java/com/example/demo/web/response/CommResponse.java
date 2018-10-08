@@ -1,5 +1,7 @@
 package com.example.demo.web.response;
 
+import com.example.demo.exception.BizException;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -45,6 +47,11 @@ public class CommResponse<D> {
 
 	public static <D> CommResponse<D> getInstances4Fail(){
 		CommResponse<D> instances = new CommResponse<D>(CODE_FAIL, MESSAGE_FAIL);
+		return instances;
+	}
+	
+	public static <D> CommResponse<D> getInstances4Fail(BizException e){
+		CommResponse<D> instances = new CommResponse<D>(e.getCode(), e.getMessage());
 		return instances;
 	}
 
