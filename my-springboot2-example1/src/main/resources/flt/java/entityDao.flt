@@ -1,0 +1,11 @@
+package ${basePackage}.${entityDaoPackage};
+
+import org.springframework.stereotype.Repository;
+
+import ${basePackage}.${baseEntityDaoPackage}.BaseEntityDao;
+import ${basePackage}.${entityPackage}.${entityClassName};
+
+@Repository
+public class ${entityClassName}EntityDao extends BaseEntityDao<${entityClassName}>{
+	
+}
