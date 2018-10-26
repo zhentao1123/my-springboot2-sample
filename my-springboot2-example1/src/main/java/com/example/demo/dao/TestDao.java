@@ -1,7 +1,5 @@
 package com.example.demo.dao;
 
-import java.util.List;
-
 import com.example.demo.dao.entity.Test;
 
 public interface TestDao {
