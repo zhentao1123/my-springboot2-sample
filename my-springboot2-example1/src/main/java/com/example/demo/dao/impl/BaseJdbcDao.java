@@ -111,6 +111,22 @@ public class BaseJdbcDao{
 		}
 	}
 	
+	public void addObject(final String sql, final Object... args) throws Exception {
+		PreparedStatementCreator psc = new PreparedStatementCreator(){
+			@Override
+			public PreparedStatement createPreparedStatement(Connection con) throws SQLException{
+				PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+				if(null!=args && args.length!=0) {
+					for(int i=0; i<args.length; i++) {
+						ps.setObject(i+1, args[i]);
+					}
+				}
+				return ps;
+			}
+		};
+		getJdbcTemplate().update(psc);
+	}
+	
 	public Integer addObjectReturnIntId(final String sql, final Object... args) throws Exception {
 		PreparedStatementCreator psc = new PreparedStatementCreator(){
 			@Override
@@ -205,6 +221,11 @@ public class BaseJdbcDao{
 	
 	public int[] batchUpdate(final String sql, final Map<String, ?>[] batchArgs) throws Exception{
 		return getNamedParameterJdbcTemplate().batchUpdate(sql, batchArgs);
+	}
+	
+	public <O> void addObject(final String sql, final O obj) throws Exception {
+		SqlParameterSource paramSource = new BeanPropertySqlParameterSource(obj);
+		getNamedParameterJdbcTemplate().update(sql, paramSource);
 	}
 	
 	/**
